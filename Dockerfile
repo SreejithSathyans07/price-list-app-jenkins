@@ -2,9 +2,9 @@ FROM jenkins/jenkins:lts
 
 USER root
 
-# Install prerequisites
+# Install prerequisites and ICU libraries for .NET
 RUN apt-get update && \
-    apt-get install -y wget curl apt-transport-https gnupg
+    apt-get install -y wget curl apt-transport-https gnupg libicu-dev
 
 # Install .NET SDK 9.0
 RUN wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh && \
