@@ -22,7 +22,7 @@ pipeline {
         
         stage('Check Chrome Version') {
             steps {
-                sh '/usr/bin/google-chrome-stable --version'
+                sh 'google-chrome --version || google-chrome-stable --version'
             }
         }
     }
