@@ -1,0 +1,25 @@
+<div class="container">
+  <h1>Price List Application</h1>
+  <button class="refresh-btn" (click)="fetchProducts()">Refresh</button>
+
+  @if (showList) {
+    <table class="price-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (product of products; track product.itemName) {
+          <tr>
+            <td>{{ product.itemName }}</td>
+            <td class="price">
+              {{ product.price | currency: "INR" : "symbol" : "1.2-2" }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
