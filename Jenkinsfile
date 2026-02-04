@@ -20,9 +20,9 @@ pipeline {
             }
         }
         
-        stage('Check Chrome Version') {
+        stage('Check Chromium Version') {
             steps {
-                sh 'google-chrome --version || google-chrome-stable --version'
+                sh 'chromium --version'
             }
         }
     }
