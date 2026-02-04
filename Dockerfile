@@ -20,7 +20,8 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
 # Install Chrome for headless testing
 RUN wget -q -O /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
     apt-get install -y /tmp/chrome.deb || apt-get install -yf && \
-    rm /tmp/chrome.deb
+    rm /tmp/chrome.deb && \
+    ln -s /usr/bin/google-chrome-stable /usr/local/bin/google-chrome
 
 # Clean up
 RUN apt-get clean && \
