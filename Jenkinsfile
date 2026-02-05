@@ -2,27 +2,11 @@ pipeline {
     agent any
     
     stages {
-        stage('Check .NET Version') {
+        stage('Build .NET API') {
             steps {
-                sh 'dotnet --version'
-            }
-        }
-        
-        stage('Check Node.js Version') {
-            steps {
-                sh 'node --version'
-            }
-        }
-        
-        stage('Check npm Version') {
-            steps {
-                sh 'npm --version'
-            }
-        }
-        
-        stage('Check Chromium Version') {
-            steps {
-                sh 'chromium --version'
+                echo 'Building .NET API...'
+                sh 'dotnet restore Jenkins.sln'
+                sh 'dotnet build Jenkins.sln --configuration Release --no-restore'
             }
         }
     }
