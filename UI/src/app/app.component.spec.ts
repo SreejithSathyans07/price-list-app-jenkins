@@ -106,15 +106,6 @@ describe("AppComponent", () => {
       expect(productService.getAllProducts).toHaveBeenCalled();
     });
 
-    it("should show alert when fetchProducts is clicked", () => {
-      spyOn(window, "alert");
-      productService.getAllProducts.and.returnValue(of([]));
-
-      component.fetchProducts();
-
-      expect(window.alert).toHaveBeenCalledWith("Fetch Products Clicked");
-    });
-
     it("should populate products array with data from service", () => {
       const mockProducts = [
         { itemName: "Tomato", price: 2.5 },

@@ -17,7 +17,7 @@ pipeline {
             steps {
                 echo 'Running Angular tests...'
                 dir('UI') {
-                    sh 'npm run test -- --watch=false --browsers=ChromiumHeadless'
+                     sh 'npm run test -- --watch=false --browsers=ChromiumHeadlessCI'
                 }
             }
         }
