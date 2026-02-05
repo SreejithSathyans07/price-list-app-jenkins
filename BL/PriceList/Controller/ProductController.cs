@@ -10,7 +10,7 @@ namespace PriceList.Controller
     {
         private readonly List<Product> vegetables = new()
             {
-                new() { ItemName = "Tomato", Price = 121 },
+                new() { ItemName = "Tomato", Price = 120 },
                 new() { ItemName = "Carrot", Price = 40 },
                 new() { ItemName = "Broccoli", Price = 180 },
                 new() { ItemName = "Spinach", Price = 200 },
