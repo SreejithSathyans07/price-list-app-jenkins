@@ -36,14 +36,13 @@ pipeline {
                 sh 'dotnet test Jenkins.sln --configuration Release --no-build --logger "trx;LogFileName=test-results.trx"'
             }
         }
-        post {
-            success {
-                echo '✅ Pipeline completed successfully!'
-            }
-            failure {
-                echo '❌ Pipeline failed!'
-            }
+    }
+    post {
+        success {
+            echo '✅ Pipeline completed successfully!'
         }
-
+        failure {
+            echo '❌ Pipeline failed!'
+        }
     }
 }
