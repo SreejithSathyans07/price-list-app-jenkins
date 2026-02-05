@@ -3,6 +3,25 @@ pipeline {
     
     stages {
 
+        stage('Build Angular App') {
+            steps {
+                echo 'Building Angular app...'
+                dir('UI') {
+                    sh 'npm ci'
+                    sh 'npm run build'
+                }
+            }
+        }
+        
+        stage('Test Angular App') {
+            steps {
+                echo 'Running Angular tests...'
+                dir('UI') {
+                    sh 'npm run test -- --watch=false --browsers=ChromiumHeadless'
+                }
+            }
+        }
+
         stage('Build .NET API') {
             steps {
                 echo 'Building .NET API...'
@@ -10,7 +29,7 @@ pipeline {
                 sh 'dotnet build Jenkins.sln --configuration Release --no-restore'
             }
         }
-        
+
         stage('Test .NET API') {
             steps {
                 echo 'Running .NET tests...'
