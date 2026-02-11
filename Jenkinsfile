@@ -4,12 +4,18 @@ pipeline {
     environment {
         DOTNET_CONFIGURATION = 'Release'
         SOLUTION_NAME = 'Jenkins.sln'
+        NODE_VERSION = '' 
+        ANGULAR_VERSION = ''
     }
     
     stages {
 
         stage('Build Angular App') {
             steps {
+                script{
+                    NODE_VERSION = sh(script: "node --version", returnStdout: true).trim()
+                    ANGULAR_VERSION = sh(script: "ng version", returnStdout: true).trim()
+                }
                 echo 'Building Angular app...'
                 dir('UI') {
                     sh 'npm ci'
@@ -49,6 +55,11 @@ pipeline {
                 }
                 echo 'Running .NET tests...'
                 sh "dotnet test ${SOLUTION_NAME} --configuration ${DOTNET_CONFIGURATION} --no-build --logger \"trx;LogFileName=test-results.trx\""
+            }
+        }
+        stage('Build Summary') {
+            steps {
+                sh "echo Build Summary: Angular Version: ${ANGULAR_VERSION}, Node Version: ${NODE_VERSION}, .NET Version: ${readFile('dotnet-version.txt').trim()}"
             }
         }
     }
