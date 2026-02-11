@@ -6,6 +6,7 @@ pipeline {
         SOLUTION_NAME = 'Jenkins.sln'
         NODE_VERSION = '' 
         ANGULAR_VERSION = ''
+        DOTNET_VERSION = ''
     }
     
     stages {
@@ -38,6 +39,7 @@ pipeline {
             steps {
                 script{
                     def version = sh(script: "dotnet --version", returnStdout: true).trim()
+                    DOTNET_VERSION = version
                     sh "echo Build .NET API: Building with .NET version: ${version}"
                     sh "echo ${version} > dotnet-version.txt" 
                 }
