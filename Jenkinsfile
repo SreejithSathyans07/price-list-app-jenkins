@@ -1,5 +1,10 @@
 pipeline {
     agent any
+
+    environment {
+        DOTNET_CONFIGURATION = 'Release'
+        SOLUTION_NAME = 'Jenkins.sln'
+    }
     
     stages {
 
@@ -23,17 +28,26 @@ pipeline {
         }
 
         stage('Build .NET API') {
+            script{
+               def version = sh(script: "dotnet --version", returnStdout: true).trim()
+               sh "echo Build .NET API: Building with .NET version: ${version}"
+               sh "echo ${version} > dotnet-version.txt" 
+            }
             steps {
                 echo 'Building .NET API...'
-                sh 'dotnet restore Jenkins.sln'
-                sh 'dotnet build Jenkins.sln --configuration Release --no-restore'
+                sh "dotnet restore ${SOLUTION_NAME}"
+                sh "dotnet build ${SOLUTION_NAME} --configuration ${DOTNET_CONFIGURATION} --no-restore"
             }
         }
 
         stage('Test .NET API') {
+            script{
+                def versionFromBuildStage = readFile('dotnet-version.txt').trim();
+                sh "echo Test .NET API: Testing with .NET version: ${versionFromBuildStage}"
+            }
             steps {
                 echo 'Running .NET tests...'
-                sh 'dotnet test Jenkins.sln --configuration Release --no-build --logger "trx;LogFileName=test-results.trx"'
+                sh "dotnet test ${SOLUTION_NAME} --configuration ${DOTNET_CONFIGURATION} --no-build --logger \"trx;LogFileName=test-results.trx\""
             }
         }
     }
