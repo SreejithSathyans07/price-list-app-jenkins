@@ -28,12 +28,13 @@ pipeline {
         }
 
         stage('Build .NET API') {
-            script{
-               def version = sh(script: "dotnet --version", returnStdout: true).trim()
-               sh "echo Build .NET API: Building with .NET version: ${version}"
-               sh "echo ${version} > dotnet-version.txt" 
-            }
+
             steps {
+                script{
+                    def version = sh(script: "dotnet --version", returnStdout: true).trim()
+                    sh "echo Build .NET API: Building with .NET version: ${version}"
+                    sh "echo ${version} > dotnet-version.txt" 
+                }
                 echo 'Building .NET API...'
                 sh "dotnet restore ${SOLUTION_NAME}"
                 sh "dotnet build ${SOLUTION_NAME} --configuration ${DOTNET_CONFIGURATION} --no-restore"
@@ -41,11 +42,11 @@ pipeline {
         }
 
         stage('Test .NET API') {
-            script{
-                def versionFromBuildStage = readFile('dotnet-version.txt').trim();
-                sh "echo Test .NET API: Testing with .NET version: ${versionFromBuildStage}"
-            }
             steps {
+                script{
+                    def versionFromBuildStage = readFile('dotnet-version.txt').trim();
+                    sh "echo Test .NET API: Testing with .NET version: ${versionFromBuildStage}"
+                }
                 echo 'Running .NET tests...'
                 sh "dotnet test ${SOLUTION_NAME} --configuration ${DOTNET_CONFIGURATION} --no-build --logger \"trx;LogFileName=test-results.trx\""
             }
