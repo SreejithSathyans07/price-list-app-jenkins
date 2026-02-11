@@ -17,7 +17,7 @@ pipeline {
                     sh 'npm ci'
                     script{
                         NODE_VERSION = sh(script: "node --version", returnStdout: true).trim()
-                        ANGULAR_VERSION = sh(script: './node_modules/.bin/ng version', returnStdout: true).trim()
+                        ANGULAR_VERSION = sh(script: './node_modules/.bin/ng version | grep "Angular CLI" | awk \'{print $3}\'', returnStdout: true).trim()
                     }
                     sh 'npm run build'
                 }
@@ -59,7 +59,14 @@ pipeline {
         }
         stage('Build Summary') {
             steps {
-                sh "echo Build Summary: Angular Version: ${ANGULAR_VERSION}, Node Version: ${NODE_VERSION}, .NET Version: ${readFile('dotnet-version.txt').trim()}"
+                echo "================================="
+                echo "Build Summary"
+                echo "================================="
+                echo "Angular CLI Version : ${ANGULAR_VERSION}"
+                echo "Node.js Version     : ${NODE_VERSION}"
+                echo ".NET Version        : ${DOTNET_VERSION}"
+                echo "Configuration       : ${DOTNET_CONFIGURATION}"
+                echo "================================="
             }
         }
     }
