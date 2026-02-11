@@ -12,14 +12,14 @@ pipeline {
 
         stage('Build Angular App') {
             steps {
-                script{
-                    NODE_VERSION = sh(script: "node --version", returnStdout: true).trim()
-                    ANGULAR_VERSION = sh(script: "npm list -g @angular/cli --depth=0 | grep @angular/cli | awk -F@ '{print $2}'", returnStdout: true).trim()
-                }
                 echo 'Building Angular app...'
                 dir('UI') {
                     sh 'npm ci'
                     sh 'npm run build'
+                }
+                script{
+                    NODE_VERSION = sh(script: "node --version", returnStdout: true).trim()
+                    ANGULAR_VERSION = sh(script: "ng version", returnStdout: true).trim()
                 }
             }
         }
