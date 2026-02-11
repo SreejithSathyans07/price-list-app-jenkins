@@ -15,11 +15,11 @@ pipeline {
                 echo 'Building Angular app...'
                 dir('UI') {
                     sh 'npm ci'
-                    sh 'npm run build'
                     script{
                         NODE_VERSION = sh(script: "node --version", returnStdout: true).trim()
-                        ANGULAR_VERSION = sh(script: './node_modules/.bin/ng version --no-interactive', returnStdout: true).trim()
+                        ANGULAR_VERSION = sh(script: './node_modules/.bin/ng version', returnStdout: true).trim()
                     }
+                    sh 'npm run build'
                 }
             }
         }
