@@ -4,7 +4,13 @@ USER root
 
 # Install prerequisites and ICU libraries for .NET
 RUN apt-get update && \
-    apt-get install -y wget curl apt-transport-https gnupg libicu-dev
+    apt-get install -y wget curl apt-transport-https gnupg libicu-dev unzip
+
+# Install AWS CLI
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install && \
+    rm -rf awscliv2.zip aws
 
 # Install .NET SDK 9.0
 RUN wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh && \
@@ -17,7 +23,7 @@ RUN wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh && \
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs
 
-# Install Chromium (alternative to Chrome, works with Angular tests)
+# Install Chromium
 RUN apt-get install -y chromium chromium-driver
 
 # Set environment variable for Chromium
