@@ -6,3 +6,4 @@ obj/
 webpack
 .angular/
 .DS_Store
+publish/
