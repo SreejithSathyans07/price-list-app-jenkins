@@ -11,8 +11,6 @@ pipeline {
         // AWS Configuration
         AWS_REGION = 'ap-south-1'
         S3_BUCKET = 'price-list-app-frontend'
-        AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')
-        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
     }
     
     stages {
@@ -40,19 +38,26 @@ pipeline {
             }
         }
 
-        stage('Deploy Angular App to S3') {
+        stage('Deploy Angular to S3') {
             steps {
                 echo 'Deploying Angular app to S3...'
                 script {
-                    sh """
-                    aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
-                    aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
-                    aws configure set default.region ${AWS_REGION}
-                    """
-                    /// Sync change to S3 bucket
-                    dir('UI/dist/product-catelogue/browser') {
-                        sh "aws s3 sync . s3://${S3_BUCKET} --delete"
+                    // Use withCredentials for secure credential handling
+                    withCredentials([
+                        string(credentialsId: 'aws-access-key-id', variable: 'AWS_KEY'),
+                        string(credentialsId: 'aws-secret-access-key', variable: 'AWS_SECRET')
+                    ]) {
+                        dir('UI/dist/product-catelogue/browser') {
+                            sh '''
+                                export AWS_ACCESS_KEY_ID=$AWS_KEY
+                                export AWS_SECRET_ACCESS_KEY=$AWS_SECRET
+                                export AWS_DEFAULT_REGION=${AWS_REGION}
+                                
+                                aws s3 sync . s3://${S3_BUCKET}/ --delete
+                            '''
+                        }
                     }
+                    
                     echo 'Angular app deployed to S3 successfully!'
                 }
             }
