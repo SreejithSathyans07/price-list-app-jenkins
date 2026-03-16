@@ -113,9 +113,8 @@ pipeline {
                             export AWS_SECRET_ACCESS_KEY=$AWS_SECRET
                             export AWS_DEFAULT_REGION=${AWS_REGION}
 
-                            # Create unique version label with timestamp
-                            TIMESTAMP=$(date +%Y%m%d-%H%M%S)
-                            VERSION_LABEL="v${BUILD_NUMBER}-${TIMESTAMP}"
+                            # Create version number
+                            VERSION_LABEL="v${BUILD_NUMBER}"
 
                             # Upload to S3 (EB uses S3 for deployments)
                             aws s3 cp dotnet-deployment.zip s3://elasticbeanstalk-${AWS_REGION}-$(aws sts get-caller-identity --query Account --output text)/${EB_APP_NAME}/${VERSION_LABEL}.zip
