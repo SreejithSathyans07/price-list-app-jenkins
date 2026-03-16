@@ -4,13 +4,16 @@ USER root
 
 # Install prerequisites and ICU libraries for .NET
 RUN apt-get update && \
-    apt-get install -y wget curl apt-transport-https gnupg libicu-dev unzip
+    apt-get install -y wget curl apt-transport-https gnupg libicu-dev unzip python3 python3-pip
 
 # Install AWS CLI
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
     unzip awscliv2.zip && \
     ./aws/install && \
     rm -rf awscliv2.zip aws
+
+# Install Elastic Beanstalk CLI (force reinstall to avoid conflicts)
+RUN pip3 install awsebcli --break-system-packages --ignore-installed
 
 # Install .NET SDK 9.0
 RUN wget https://dot.net/v1/dotnet-install.sh -O dotnet-install.sh && \

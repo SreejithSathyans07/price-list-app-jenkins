@@ -1,0 +1,8 @@
+global:
+  application_name: price-list-api
+  default_region: ap-south-1
+  workspace_type: Application
+
+branch-defaults:
+  main:
+    environment: price-list-api-env

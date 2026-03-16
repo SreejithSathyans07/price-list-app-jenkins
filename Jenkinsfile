@@ -88,6 +88,54 @@ pipeline {
                 sh "dotnet test ${SOLUTION_NAME} --configuration ${DOTNET_CONFIGURATION} --no-build --logger \"trx;LogFileName=test-results.trx\""
             }
         }
+
+        stage('Deploy .NET API to elastic beanstalk') {
+            steps {
+                echo 'Deploying .NET API to Elastic Beanstalk...'
+                script{
+                    withCredentials([
+                        string(credentialsId: 'aws-access-key-id', variable: 'AWS_KEY'),
+                        string(credentialsId: 'aws-secret-access-key', variable: 'AWS_SECRET')
+                    ]){
+                        sh "dotnet publish ${SOLUTION_NAME} -c ${DOTNET_CONFIGURATION} -o ./publish"
+
+                        dir('publish') {
+                            sh 'zip -r ../dotnet-deployment.zip .'
+                        }
+
+                        // Deploy to Elastic Beanstalk using AWS CLI
+                        sh '''
+                            export AWS_ACCESS_KEY_ID=$AWS_KEY
+                            export AWS_SECRET_ACCESS_KEY=$AWS_SECRET
+                            export AWS_DEFAULT_REGION=${AWS_REGION}
+
+                            # Create application version
+                            VERSION_LABEL="v${BUILD_NUMBER}-${GIT_COMMIT:0:7}"
+
+                            # Upload to S3 (EB uses S3 for deployments)
+                            aws s3 cp dotnet-deployment.zip s3://elasticbeanstalk-${AWS_REGION}-$(aws sts get-caller-identity --query Account --output text)/${EB_APP_NAME}/${VERSION_LABEL}.zip
+
+                            # Create application version
+                            aws elasticbeanstalk create-application-version \
+                                --application-name ${EB_APP_NAME} \
+                                --version-label ${VERSION_LABEL} \
+                                --source-bundle S3Bucket="elasticbeanstalk-${AWS_REGION}-$(aws sts get-caller-identity --query Account --output text)",S3Key="${EB_APP_NAME}/${VERSION_LABEL}.zip"
+                            
+                            # Deploy to environment
+                            aws elasticbeanstalk update-environment \
+                                --application-name ${EB_APP_NAME} \
+                                --environment-name ${EB_ENV_NAME} \
+                                --version-label ${VERSION_LABEL}
+                            
+                            echo "Deployment initiated. Version: ${VERSION_LABEL}"
+                        '''
+                        // Clean up
+                        sh 'rm -rf publish dotnet-deployment.zip'
+                    }
+                    echo '.NET API deployment initiated!'
+                }
+            }
+        }
         stage('Build Summary') {
             steps {
                 echo "================================="
