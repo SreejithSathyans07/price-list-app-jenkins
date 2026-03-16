@@ -11,6 +11,10 @@ pipeline {
         // AWS Configuration
         AWS_REGION = 'ap-south-1'
         S3_BUCKET = 'price-list-app-frontend'
+
+        //Elastic Beanstalk Configuration
+        EB_APP_NAME = 'price-list-api'
+        EB_ENV_NAME = 'price-list-api-env'
     }
     
     stages {
