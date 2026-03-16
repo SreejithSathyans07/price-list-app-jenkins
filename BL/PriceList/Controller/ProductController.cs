@@ -19,7 +19,9 @@ namespace PriceList.Controller
                 new() { ItemName = "Onion", Price = 30 },
                 new() { ItemName = "Potato", Price = 40 },
                 new() { ItemName = "Lettuce", Price = 100 },
-                new() { ItemName = "Garlic", Price = 80 }
+                new() { ItemName = "Garlic", Price = 80 },
+                new() { ItemName = "Ginger", Price = 90 },
+                new() { ItemName = "Mushroom", Price = 150 },
             };
         [HttpGet]
         public IActionResult GetProduct()

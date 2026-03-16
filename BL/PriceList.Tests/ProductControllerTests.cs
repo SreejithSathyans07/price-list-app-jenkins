@@ -44,7 +44,7 @@ namespace PriceList.Tests
 
             // Assert
             Assert.NotNull(products);
-            Assert.Equal(10, products.Count);
+            Assert.Equal(12, products.Count);
         }
 
         [Fact]
