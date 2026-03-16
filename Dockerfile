@@ -4,7 +4,7 @@ USER root
 
 # Install prerequisites and ICU libraries for .NET
 RUN apt-get update && \
-    apt-get install -y wget curl apt-transport-https gnupg libicu-dev unzip python3 python3-pip
+    apt-get install -y wget curl apt-transport-https gnupg libicu-dev unzip zip python3 python3-pip
 
 # Install AWS CLI
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
