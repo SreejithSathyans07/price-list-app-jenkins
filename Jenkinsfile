@@ -104,7 +104,7 @@ pipeline {
                         }
 
                         // Deploy to Elastic Beanstalk using AWS CLI
-                        sh '''
+                        sh '''#!/bin/bash
                             export AWS_ACCESS_KEY_ID=$AWS_KEY
                             export AWS_SECRET_ACCESS_KEY=$AWS_SECRET
                             export AWS_DEFAULT_REGION=${AWS_REGION}
